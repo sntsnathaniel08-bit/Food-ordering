@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CampusFood - My Orders</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial;margin:0;background:#fff7ed;color:#333}
+header{background:#ff6b00;color:white;text-align:center;padding:20px}
+nav{text-align:center;background:white;padding:15px}
+nav a{margin:8px;color:#ff6b00;text-decoration:none;font-weight:bold}
+.container{max-width:700px;margin:auto;padding:20px}
+.order{background:white;padding:18px;margin:15px 0;border-radius:10px;box-shadow:0 2px 5px #ccc;overflow-wrap:anywhere}
+.status{font-weight:bold;color:#ff6b00;font-size:18px}
+button{background:#ff6b00;color:white;border:0;padding:10px 15px;border-radius:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<header><h1>CampusFood</h1><p>My Orders</p></header>
+<nav>
+<a href="index.html">Home</a>
+<a href="menu.html">Menu</a>
+<a href="orders.html">My Orders</a>
+<a href="admin-login.html">Admin</a>
+</nav>
+<div class="container">
+<h2>Your Orders</h2>
+<div id="orders">Loading orders...</div>
+<button id="refresh">Refresh Orders</button>
+</div>
+<script>
+const ordersBox=document.getElementById("orders");function getOrders(){
+try{
+let current=JSON.parse(localStorage.getItem("campusfood_orders")||"[]");
+let older=JSON.parse(localStorage.getItem("campusOrders")||"[]");
+return current.length?current:older;
+}catch(e){return[]}
+}
+
+function showOrders(){
+let orders=getOrders();
+ordersBox.innerHTML="";
+
+if(!orders.length){
+ordersBox.textContent="No orders found in this browser.";
+return;
+}
+
+orders.slice().reverse().forEach((order,index)=>{
+let box=document.createElement("div");
+box.className="order";
+
+let title=document.createElement("h3");
+title.textContent="Order #"+(order.id||orders.length-index);
+
+let date=document.createElement("p");
+date.textContent="Date: "+(order.date||"Not available");
+
+let items=document.createElement("div");
+(order.items||[]).forEach(item=>{
+let p=document.createElement("p");
+p.textContent=item.name+" × "+(item.qty||1)+" — PHP "+
+(Number(item.price||0)*Number(item.qty||1)).toFixed(2);
+items.appendChild(p);
+});
+
+let total=document.createElement("p");
+total.textContent="Total: PHP "+Number(order.total||0).toFixed(2);
+
+let status=document.createElement("p");
+status.className="status";
+status.textContent="Status: "+(order.status||"Pending");
+
+box.append(title,date,items,total,status);
+ordersBox.appendChild(box);
+});
+}
+
+document.getElementById("refresh").onclick=showOrders;
+showOrders();
+setInterval(showOrders,3000);
+</script>
+
+</body>
+</html>

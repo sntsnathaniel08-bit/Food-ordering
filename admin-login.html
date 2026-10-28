@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CampusFood Admin Login</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f97316,#ea580c);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.login-box{width:100%;max-width:370px;background:white;padding:30px;border-radius:18px;box-shadow:0 8px 25px #0003}
+.logo{text-align:center;font-size:45px;margin-bottom:10px}
+h2{text-align:center;color:#f97316;margin:0 0 8px}
+.subtitle{text-align:center;color:#777;margin:0 0 25px;font-size:14px}
+label{display:block;font-weight:bold;font-size:14px;margin-top:14px}
+input{width:100%;padding:13px;margin-top:7px;border:1px solid #ddd;border-radius:8px;font-size:16px}
+input:focus{outline:2px solid #fdba74;border-color:#f97316}
+.password-wrap{display:flex;gap:6px;align-items:center}
+.password-wrap input{flex:1;min-width:0}
+#togglePassword{width:auto;padding:12px;margin-top:7px;background:#eee;color:#333;font-size:13px}
+button{width:100%;padding:13px;margin-top:20px;border:0;border-radius:8px;background:#f97316;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+button:active{opacity:.8}
+#error{text-align:center;color:#dc2626;min-height:20px;font-size:14px}
+.home{text-align:center;margin-top:15px}
+.home a{color:#ea580c;text-decoration:none;font-size:14px}
+</style>
+</head>
+<body>
+<div class="login-box">
+<div class="logo">🍽️</div>
+<h2>CampusFood Admin</h2>
+<p class="subtitle">Sign in to manage food orders</p><form id="loginForm">
+<label for="username">Username</label>
+<input id="username" type="text" placeholder="Enter username" autocomplete="username" required><label for="password">Password</label>
+
+<div class="password-wrap">
+<input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required>
+<button id="togglePassword" type="button">Show</button>
+</div><button id="loginBtn" type="submit">Login</button>
+
+<p id="error" role="alert" aria-live="polite"></p>
+</form><div class="home"><a href="index.html">← Back to Home</a></div>
+</div><script>
+const form=document.getElementById("loginForm");
+const usernameInput=document.getElementById("username");
+const passwordInput=document.getElementById("password");
+const togglePassword=document.getElementById("togglePassword");
+const error=document.getElementById("error");
+
+togglePassword.addEventListener("click",()=>{
+const show=passwordInput.type==="password";
+passwordInput.type=show?"text":"password";
+togglePassword.textContent=show?"Hide":"Show";
+});
+
+form.addEventListener("submit",event=>{
+event.preventDefault();
+error.textContent="";
+
+const username=usernameInput.value.trim();
+const password=passwordInput.value;
+
+if(username==="admin" && password==="admin123"){
+sessionStorage.setItem("adminLoggedIn","true");
+window.location.href="admin.html";
+}else{
+error.textContent="Incorrect username or password.";
+passwordInput.value="";
+passwordInput.focus();
+}
+});
+</script></body>
+</html>
